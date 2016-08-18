@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "600325590862",
+    "firebase_url": "https://levooestafeta.firebaseio.com",
+    "project_id": "levooestafeta",
+    "storage_bucket": "levooestafeta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600325590862:android:e8905c7f63b5faea",
+        "android_client_info": {
+          "package_name": "pt.levoo.courier.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600325590862-lerdpacf03m5tu0iq1j1ojcpnjtu2hdr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJEptefrtRGZndVPBwy6NwM-d16OiLhDY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
