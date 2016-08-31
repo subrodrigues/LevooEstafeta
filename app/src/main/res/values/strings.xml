@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Levoo Estafeta</string>
     <string name="hello_world">Hello World!</string>
+
+    <string name="firebase_courier_order_path">%1$s</string>
+
 </resources>

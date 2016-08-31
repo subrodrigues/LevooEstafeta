@@ -1,13 +1,13 @@
 package pt.levoo.courier.android.firebase.interfaces;
 
-import pt.levoo.android.firebase.models.FirebaseOrderModel;
+
+import pt.levoo.courier.android.firebase.models.FirebaseCourierOrderModel;
 
 /**
  * Created by filiperodrigues on 23/05/16.
  */
 public interface FirebaseCourierOrderCallbackInterface {
 
-    // TODO: change to specific object
-    void notifyOrderChanged(FirebaseOrderModel orderChanged);
-    void notifyOrderRemoved(FirebaseOrderModel orderRemoved);
+    void notifyOrderChanged(FirebaseCourierOrderModel orderChanged);
+    void notifyOrderRemoved(FirebaseCourierOrderModel orderRemoved);
 }

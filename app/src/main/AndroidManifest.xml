@@ -7,11 +7,17 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:name=".LevooCourierApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCUkxmrSzQ6syBSaVIVu5xjjcoKICafcss"/>
+
         <uses-library
             android:name="com.google.android.wearable"
             android:required="false" />

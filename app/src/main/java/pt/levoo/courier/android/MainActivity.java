@@ -3,10 +3,18 @@ package pt.levoo.courier.android;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
+import android.support.wearable.view.DismissOverlayView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,14 +28,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class MainActivity extends WearableActivity {
+import pt.levoo.courier.android.firebase.LevooCourierFirebaseHelper;
 
-    private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
-            new SimpleDateFormat("HH:mm", Locale.US);
+public class MainActivity extends WearableActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
+    private static final LatLng PINK = new LatLng(41.137439, -8.631733);
+
+    private LevooCourierFirebaseHelper mFirebaseHelper;
+    private GoogleMap mMap;
+    private MapFragment mMapFragment;
+    private DismissOverlayView mDismissOverlay;
+
+    private static final SimpleDateFormat AMBIENT_DATE_FORMAT = new SimpleDateFormat("HH:mm", Locale.US);
 
     private BoxInsetLayout mContainerView;
-    private TextView mTextView;
-    private TextView mClockView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,69 +49,45 @@ public class MainActivity extends WearableActivity {
         setAmbientEnabled();
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
-        mTextView = (TextView) findViewById(R.id.text);
-        mClockView = (TextView) findViewById(R.id.clock);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        if (database != null) {
-            DatabaseReference mRequestsReference = database.getReference("requests/");
+        mDismissOverlay = (DismissOverlayView) findViewById(R.id.dismiss_overlay);
+        mDismissOverlay.setIntroText("Long press to exit");
+        mDismissOverlay.showIntroIfNecessary();
 
-            mRequestsReference.addListenerForSingleValueEvent(mRequestsSingleEventListener);
-            mRequestsReference.addChildEventListener(mRequestsChildEventListener);
-        }
+        mMapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mMapFragment.getMapAsync(this);
+
+        mFirebaseHelper = new LevooCourierFirebaseHelper(this);
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        if(user != null) {
+//            initFirebaseHelper(user.getUid());
+//        }
+        initFirebaseHelper("e0");
     }
 
-    /**
-     * Callback used to get the first instance of Requests when app is launched
-     */
-    private ValueEventListener mRequestsSingleEventListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            Log.i("REQUESTS", dataSnapshot.getValue().toString());
+    public void initFirebaseHelper(String uid) {
+        if (mFirebaseHelper == null) {
+            Log.i("Application", "initFirebaseHelper uid("+uid+")");
+            mFirebaseHelper = new LevooCourierFirebaseHelper(this);
         }
+        mFirebaseHelper.initFirebaseHelper(uid);
+    }
 
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            // Failed to read value
-            Log.w("Firebase Application", "Failed to read value.", databaseError.toException());
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        mDismissOverlay.show();
+    }
 
-            // Network error is already being treated at our side
-            if(databaseError.getCode() != DatabaseError.NETWORK_ERROR){
-                // TODO: deal with it
-            }
-        }
-    };
-
-    /**
-     * Callback used to update Requests when change occurs
-     */
-    private ChildEventListener mRequestsChildEventListener = new ChildEventListener() {
-
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Log.i("Request Added", dataSnapshot.getValue().toString());
-        }
-
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            Log.i("Request Changed", dataSnapshot.getValue().toString());
-        }
-
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-            Log.i("Request Removed", dataSnapshot.getValue().toString());
-        }
-
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            Log.i("Request Cancelled", "DatabaseError");
-        }
-    };
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.addMarker(new MarkerOptions().position(PINK)
+                .title("Current Position")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_current_position_icon))
+        );
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(PINK, 10));
+        mMap.setOnMapLongClickListener(this);
+    }
 
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
@@ -121,14 +110,17 @@ public class MainActivity extends WearableActivity {
     private void updateDisplay() {
         if (isAmbient()) {
             mContainerView.setBackgroundColor(getResources().getColor(android.R.color.black));
-            mTextView.setTextColor(getResources().getColor(android.R.color.white));
+        /*    mTextView.setTextColor(getResources().getColor(android.R.color.white));
             mClockView.setVisibility(View.VISIBLE);
 
             mClockView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
+        */
         } else {
             mContainerView.setBackground(null);
-            mTextView.setTextColor(getResources().getColor(android.R.color.black));
+        /*    mTextView.setTextColor(getResources().getColor(android.R.color.black));
             mClockView.setVisibility(View.GONE);
+            */
         }
     }
+
 }

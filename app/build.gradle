@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'Levoo'
+            keyPassword 'thingpink2016'
+            storeFile file('levoo_courier.jks')
+            storePassword 'thingpink2016'
+        }
+    }
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
 
@@ -12,10 +20,23 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug{
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
+
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+        incremental true
+        dexInProcess true
     }
 }
 
@@ -25,6 +46,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.4.0'
     compile 'com.google.android.gms:play-services-wearable:9.4.0'
     compile 'com.google.firebase:firebase-database:9.4.0'
+    compile 'com.google.android.gms:play-services-maps:9.4.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
