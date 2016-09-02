@@ -9,6 +9,7 @@
 
     <FrameLayout
         android:id="@+id/map_container"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -24,5 +25,31 @@
         android:id="@+id/dismiss_overlay"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
+
+    <FrameLayout
+        android:id="@+id/main_activity_offline_view_container"
+        android:background="@color/colorPrimary"
+        android:visibility="visible"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/main_activity_online_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="25dp"
+            android:background="@color/green">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:text="Ficar Online"
+                android:textAllCaps="true"/>
+        </FrameLayout>
+    </FrameLayout>
 
 </android.support.wearable.view.BoxInsetLayout>
